@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barabara Watch 🇰🇪 | Report Matatu &amp; Corruption</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap');
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .hero-bg { background: linear-gradient(135deg, #166534 0%, #4ade80 100%); }
+        .matatu-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .matatu-card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-sm border-b border-green-200">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-600 text-white rounded-2xl flex items-center justify-center text-3xl">🚌</div>
+                <div>
+                    <h1 class="text-2xl font-bold text-green-700 tracking-tight">Barabara Watch</h1>
+                    <p class="text-xs text-green-600 -mt-1">Kenya's Matatu Safety Network</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-8 text-sm font-medium">
+                <a href="#" onclick="showSection('submit')" class="hover:text-green-700 transition-colors active">Submit Report</a>
+                <a href="#" onclick="showSection('feed')" class="hover:text-green-700 transition-colors">Live Reports</a>
+                <a href="https://github.com/GreatFestoo/barabara-watch" target="_blank" 
+                   class="flex items-center gap-2 text-green-700 hover:text-green-800">
+                    <i class="fa-brands fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6 py-8">
+
+        <!-- HERO -->
+        <div class="hero-bg rounded-3xl text-white p-12 mb-12 text-center">
+            <div class="max-w-2xl mx-auto">
+                <span class="inline-block bg-white/20 text-xs font-medium tracking-widest px-6 py-2 rounded-full mb-4">🇰🇪 REAL-TIME REPORTING</span>
+                <h2 class="text-5xl font-bold leading-tight mb-4">Report reckless matatus,<br>police bribes &amp; road dangers</h2>
+                <p class="text-xl opacity-90">Your anonymous report helps make Kenyan roads safer for everyone.</p>
+                <div class="mt-8 flex justify-center gap-4">
+                    <button onclick="showSection('submit')" 
+                            class="bg-white text-green-700 px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95">
+                        Submit Report Now →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBMIT SECTION -->
+        <div id="submit-section">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- FORM -->
+                <div class="bg-white rounded-3xl shadow-xl p-8">
+                    <h3 class="text-3xl font-semibold mb-8 flex items-center gap-3">
+                        <i class="fa-solid fa-file-circle-exclamation text-amber-500"></i>
+                        Submit New Report
+                    </h3>
+
+                    <form id="report-form" class="space-y-8">
+                        <!-- Journey Details -->
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Travel Date</label>
+                                <input id="travelDate" type="date" required class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Travel Time</label>
+                                <input id="travelTime" type="time" class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">From</label>
+                                <input id="origin" type="text" placeholder="Nairobi" required class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">To</label>
+                                <input id="destination" type="text" placeholder="Eldoret" required class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Plate Number</label>
+                                <input id="plate" type="text" placeholder="KBC 123A" maxlength="10" 
+                                       class="w-full border border-gray-300 rounded-2xl px-5 py-4 uppercase focus:outline-none focus:border-green-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Sacco (optional)</label>
+                                <input id="sacco" type="text" placeholder="Modern Coast" 
+                                       class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                            </div>
+                        </div>
+
+                        <!-- Ratings -->
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Driver Rating (1-5)</label>
+                                <select id="drivingRating" class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                                    <option value="">Select...</option>
+                                    <option value="5">5 ★ Excellent</option>
+                                    <option value="4">4 ★ Good</option>
+                                    <option value="3">3 ★ Average</option>
+                                    <option value="2">2 ★ Poor</option>
+                                    <option value="1">1 ★ Dangerous</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Vehicle Rating (1-5)</label>
+                                <select id="vehicleRating" class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                                    <option value="">Select...</option>
+                                    <option value="5">5 ★ Excellent</option>
+                                    <option value="4">4 ★ Good</option>
+                                    <option value="3">3 ★ Average</option>
+                                    <option value="2">2 ★ Poor</option>
+                                    <option value="1">1 ★ Dangerous</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Concerns -->
+                        <div>
+                            <label class="block text-sm font-medium mb-3">Concerns (select all that apply)</label>
+                            <div class="grid grid-cols-2 gap-3 text-sm" id="concerns-grid">
+                                <!-- populated by JS -->
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Additional Comments</label>
+                            <textarea id="comments" rows="3" placeholder="The driver was overspeeding and using phone..." 
+                                      class="w-full border border-gray-300 rounded-3xl px-5 py-4 focus:outline-none focus:border-green-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Your Contact (optional - for follow-up)</label>
+                            <input id="contact" type="tel" placeholder="07xx xxx xxx" 
+                                   class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                        </div>
+
+                        <!-- Corruption Toggle -->
+                        <div class="pt-6 border-t">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input id="isCorrupt" type="checkbox" class="w-5 h-5 accent-green-600">
+                                <span class="font-medium text-lg">This involved police corruption / bribery</span>
+                            </label>
+
+                            <!-- Corruption Fields (hidden by default) -->
+                            <div id="corruption-fields" class="hidden mt-6 space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Incident Location</label>
+                                    <input id="corruptLocation" type="text" placeholder="Near Nakuru Police Roadblock" 
+                                           class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Type of Corruption</label>
+                                    <select id="corruptType" class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                                        <option value="">Select type...</option>
+                                        <option value="Officer received cash bribe">Officer received cash bribe</option>
+                                        <option value="Illegal roadblock for extortion">Illegal roadblock for extortion</option>
+                                        <option value="Officer threatened driver">Officer threatened driver</option>
+                                        <option value="Confiscating documents for payment">Confiscating documents for payment</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Description</label>
+                                    <textarea id="corruptDescription" rows="3" placeholder="Officer asked for KSh 500 to let us pass..." 
+                                              class="w-full border border-gray-300 rounded-3xl px-5 py-4 focus:outline-none focus:border-green-500"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Evidence (photo/video - optional)</label>
+                                    <input id="evidenceFile" type="file" accept="image/*,video/*" 
+                                           class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-green-500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full bg-green-600 hover:bg-green-700 transition-all text-white font-semibold text-xl py-6 rounded-3xl shadow-lg flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            SUBMIT REPORT ANONYMOUSLY
+                        </button>
+                    </form>
+                </div>
+
+                <!-- RIGHT SIDE INFO -->
+                <div class="space-y-8">
+                    <div class="bg-white rounded-3xl p-8 shadow-xl">
+                        <h4 class="font-semibold text-lg mb-6 flex items-center gap-2">
+                            <span class="text-2xl">🔒</span> Why your report matters
+                        </h4>
+                        <ul class="space-y-6 text-sm">
+                            <li class="flex gap-4"><span class="text-green-600 text-xl">✓</span> All reports are anonymous</li>
+                            <li class="flex gap-4"><span class="text-green-600 text-xl">✓</span> Data goes straight to NTSA, IPOA &amp; public dashboard</li>
+                            <li class="flex gap-4"><span class="text-green-600 text-xl">✓</span> Real-time feed visible to everyone</li>
+                            <li class="flex gap-4"><span class="text-green-600 text-xl">✓</span> Helps flag dangerous vehicles &amp; corrupt officers</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-3xl p-8 text-center">
+                        <p class="text-amber-700 font-medium">⚠️ This is a public demo</p>
+                        <p class="text-xs mt-2 text-amber-600">Replace the Supabase keys in the &lt;script&gt; section with your own project credentials to make it live.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEED SECTION -->
+        <div id="feed-section" class="hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-3xl font-semibold">Live Reports Feed</h3>
+                <button onclick="loadReports()" 
+                        class="flex items-center gap-2 bg-white border border-gray-300 hover:border-green-300 px-6 py-3 rounded-2xl text-sm font-medium">
+                    <i class="fa-solid fa-rotate"></i> Refresh
+                </button>
+            </div>
+            
+            <div id="reports-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t py-8 mt-20">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-gray-500">
+            Barabara Watch Demo • Built with Supabase + Tailwind • 
+            <a href="https://github.com/GreatFestoo/barabara-watch" target="_blank" class="underline">View full repo on GitHub</a>
+            <br>
+            <span class="text-green-600">Made for safer roads in Kenya 🇰🇪</span>
+        </div>
+    </footer>
+
+    <script type="module">
+        // ============================================================
+        // SUPABASE CLIENT (replace these two lines!)
+        // ============================================================
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const SUPABASE_URL  = 'https://YOUR-PROJECT-ID.supabase.co';   // ← CHANGE THIS
+        const SUPABASE_ANON = 'YOUR-ANON-PUBLIC-KEY';                  // ← CHANGE THIS
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+        // ============================================================
+        // SUBMIT REPORT FUNCTION (from your library)
+        // ============================================================
+        async function submitReport(formData, corruptionData, evidenceFile) {
+            try {
+                const { data: report, error: reportError } = await supabase
+                    .from('reports')
+                    .insert({
+                        travel_date:     formData.travelDate,
+                        travel_time:     formData.travelTime || null,
+                        origin:          formData.origin.trim(),
+                        destination:     formData.destination.trim(),
+                        plate_number:    formData.plate.toUpperCase().trim(),
+                        sacco_name:      formData.sacco || null,
+                        driving_rating:  formData.drivingRating || null,
+                        vehicle_rating:  formData.vehicleRating || null,
+                        concerns:        formData.concerns,
+                        comments:        formData.comments || null,
+                        reporter_contact: formData.contact || null,
+                    })
+                    .select()
+                    .single();
+
+                if (reportError) throw reportError;
+
+                if (corruptionData?.isCorrupt) {
+                    let evidenceUrls = [];
+                    if (evidenceFile) {
+                        const fileExt = evidenceFile.name.split('.').pop().toLowerCase();
+                        const fileName = `${report.id}-${Date.now()}.${fileExt}`;
+                        const filePath = `corruption-evidence/${fileName}`;
+
+                        const { error: uploadError } = await supabase.storage
+                            .from('evidence')
+                            .upload(filePath, evidenceFile, { upsert: false });
+
+                        if (!uploadError) {
+                            const { data: urlData } = supabase.storage.from('evidence').getPublicUrl(filePath);
+                            evidenceUrls = [urlData.publicUrl];
+                        }
+                    }
+
+                    await supabase.from('corruption_reports').insert({
+                        report_id: report.id,
+                        incident_location: corruptionData.location,
+                        corruption_type: mapCorruptionType(corruptionData.type),
+                        description: corruptionData.description || null,
+                        evidence_urls: evidenceUrls,
+                    });
+                }
+
+                return { success: true, reportId: report.id };
+            } catch (err) {
+                console.error(err);
+                return { success: false, error: err.message };
+            }
+        }
+
+        function mapCorruptionType(uiValue) {
+            const map = {
+                'Officer received cash bribe': 'cash_bribe',
+                'Illegal roadblock for extortion': 'illegal_roadblock',
+                'Officer threatened driver': 'threatening_driver',
+                'Confiscating documents for payment': 'document_confiscation',
+            };
+            return map[uiValue] ?? 'other';
+        }
+
+        // ============================================================
+        // FETCH REPORTS (simplified for demo)
+        // ============================================================
+        async function fetchReports() {
+            try {
+                const { data, error } = await supabase
+                    .from('reports')
+                    .select(`
+                        id, created_at, travel_date, origin, destination, 
+                        plate_number, sacco_name, driving_rating, vehicle_rating, 
+                        concerns, comments,
+                        corruption_reports (incident_location, corruption_type)
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(9);
+
+                if (error) throw error;
+                return data || [];
+            } catch (e) {
+                console.warn("Demo mode - using mock data (replace Supabase keys to go live)", e);
+                // Mock data for demo when keys not set
+                return [
+                    { id: 1, plate_number: "KBC 456X", origin: "Nairobi", destination: "Nakuru", created_at: "2025-03-16", concerns: ["Overspeeding"], corruption_reports: [] },
+                    { id: 2, plate_number: "KBA 789Y", origin: "Mombasa", destination: "Malindi", created_at: "2025-03-15", concerns: ["No seatbelts", "Reckless driving"], corruption_reports: [{incident_location: "Roadblock"}] },
+                    { id: 3, plate_number: "KBD 123Z", origin: "Eldoret", destination: "Kitale", created_at: "2025-03-14", concerns: ["Overspeeding"], corruption_reports: [] }
+                ];
+            }
+        }
+
+        // ============================================================
+        // RENDER REPORT CARDS
+        // ============================================================
+        async function loadReports() {
+            const grid = document.getElementById('reports-grid');
+            grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">Loading live reports...</div>';
+
+            const reports = await fetchReports();
+
+            grid.innerHTML = reports.map(r => `
+                <div class="matatu-card bg-white rounded-3xl overflow-hidden border border-gray-100 shadow">
+                    <div class="bg-green-50 px-6 py-4 flex items-center justify-between text-sm">
+                        <div class="font-mono font-bold text-green-700">${r.plate_number}</div>
+                        <div class="text-xs text-gray-500">${new Date(r.created_at).toLocaleDateString('en-KE')}</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xl font-semibold">${r.origin} → ${r.destination}</div>
+                        ${r.sacco_name ? `<div class="text-xs text-gray-500 mt-1">${r.sacco_name}</div>` : ''}
+                        
+                        <div class="flex flex-wrap gap-2 mt-6">
+                            ${r.concerns ? r.concerns.map(c => 
+                                `<span class="text-xs bg-red-100 text-red-700 px-4 py-1 rounded-full">${c}</span>`
+                            ).join('') : ''}
+                        </div>
+
+                        ${r.corruption_reports && r.corruption_reports.length ? `
+                            <div class="mt-6 flex items-center gap-2 text-amber-600 text-xs font-medium">
+                                <i class="fa-solid fa-handshake"></i>
+                                <span>Police corruption reported</span>
+                            </div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // FORM HANDLING
+        // ============================================================
+        function initForm() {
+            // Populate concerns checkboxes
+            const concernsList = [
+                "Overspeeding", "No seatbelts", "Reckless driving", 
+                "Using phone while driving", "Overloading", "Bad brakes", 
+                "Drunk driving", "No lights at night"
+            ];
+            const grid = document.getElementById('concerns-grid');
+            grid.innerHTML = concernsList.map(c => `
+                <label class="flex items-center gap-2 cursor-pointer bg-gray-50 hover:bg-green-50 p-4 rounded-2xl transition-colors">
+                    <input type="checkbox" value="${c}" class="w-5 h-5 accent-green-600">
+                    <span class="text-sm">${c}</span>
+                </label>
+            `).join('');
+
+            // Toggle corruption fields
+            const corruptCheck = document.getElementById('isCorrupt');
+            const corruptDiv = document.getElementById('corruption-fields');
+            corruptCheck.addEventListener('change', () => {
+                corruptDiv.classList.toggle('hidden', !corruptCheck.checked);
+            });
+
+            // Form submit
+            const form = document.getElementById('report-form');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = {
+                    travelDate: document.getElementById('travelDate').value,
+                    travelTime: document.getElementById('travelTime').value,
+                    origin: document.getElementById('origin').value,
+                    destination: document.getElementById('destination').value,
+                    plate: document.getElementById('plate').value,
+                    sacco: document.getElementById('sacco').value,
+                    drivingRating: document.getElementById('drivingRating').value,
+                    vehicleRating: document.getElementById('vehicleRating').value,
+                    concerns: Array.from(document.querySelectorAll('#concerns-grid input:checked')).map(cb => cb.value),
+                    comments: document.getElementById('comments').value,
+                    contact: document.getElementById('contact').value,
+                };
+
+                const isCorrupt = document.getElementById('isCorrupt').checked;
+                let corruptionData = null;
+                if (isCorrupt) {
+                    corruptionData = {
+                        isCorrupt: true,
+                        location: document.getElementById('corruptLocation').value,
+                        type: document.getElementById('corruptType').value,
+                        description: document.getElementById('corruptDescription').value,
+                    };
+                }
+
+                const evidenceFile = document.getElementById('evidenceFile').files[0];
+
+                const btn = form.querySelector('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `Submitting <span class="animate-pulse">...</span>`;
+                btn.disabled = true;
+
+                const result = await submitReport(formData, corruptionData, evidenceFile);
+
+                if (result.success) {
+                    alert(`✅ Report submitted successfully!\nReport ID: ${result.reportId}\n\nThank you for helping make Kenyan roads safer!`);
+                    form.reset();
+                    corruptDiv.classList.add('hidden');
+                    loadReports(); // refresh feed
+                } else {
+                    alert(`❌ Error: ${result.error}`);
+                }
+
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        // ============================================================
+        // SECTION SWITCHER
+        // ============================================================
+        function showSection(section) {
+            document.getElementById('submit-section').classList.toggle('hidden', section !== 'submit');
+            document.getElementById('feed-section').classList.toggle('hidden', section !== 'feed');
+            
+            if (section === 'feed') loadReports();
+        }
+
+        // ============================================================
+        // INIT EVERYTHING
+        // ============================================================
+        window.onload = () => {
+            initForm();
+            showSection('submit');   // start on submit form
+            // Optional: loadReports() if you want feed visible immediately
+        };
+    </script>
+</body>
+</html>
