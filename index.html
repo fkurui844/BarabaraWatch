@@ -8,6 +8,7 @@
     <title>Barabara Watch 🇰🇪 | Report Matatu &amp; Corruption</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap');
         * { box-sizing: border-box; }
@@ -23,6 +24,17 @@
         .matatu-card:hover { 
             transform: translateY(-8px); 
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); 
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-left: 4px solid #166534;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
         }
         
         /* Loading animation */
@@ -49,6 +61,29 @@
         
         .input-error:focus {
             ring-color: #ef4444;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .badge-success {
+            background-color: #dcfce7;
+            color: #166534;
         }
     </style>
 </head>
@@ -257,18 +292,128 @@
             </div>
         </div>
 
-        <!-- FEED SECTION -->
+        <!-- FEED SECTION - ANALYTICS DASHBOARD -->
         <div id="feed-section" class="hidden">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-                <h3 class="text-3xl font-semibold">Live Reports Feed</h3>
-                <button onclick="loadReports()" 
-                        class="flex items-center gap-2 bg-white border border-gray-300 hover:border-green-300 hover:bg-green-50 px-6 py-3 rounded-2xl text-sm font-medium transition-colors">
-                    <i class="fa-solid fa-rotate"></i> Refresh
-                </button>
+            <!-- Summary Stats -->
+            <div class="mb-8">
+                <h3 class="text-3xl font-semibold mb-6">Safety Analytics Dashboard</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="stat-card bg-white rounded-2xl p-6 shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm">Total Reports</p>
+                                <p class="text-3xl font-bold text-green-700 mt-2" id="stat-total">0</p>
+                            </div>
+                            <i class="fa-solid fa-file-lines text-4xl text-green-100"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card bg-white rounded-2xl p-6 shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm">Corruption Cases</p>
+                                <p class="text-3xl font-bold text-amber-700 mt-2" id="stat-corruption">0</p>
+                            </div>
+                            <i class="fa-solid fa-triangle-exclamation text-4xl text-amber-100"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card bg-white rounded-2xl p-6 shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm">High-Risk Routes</p>
+                                <p class="text-3xl font-bold text-red-700 mt-2" id="stat-routes">0</p>
+                            </div>
+                            <i class="fa-solid fa-road text-4xl text-red-100"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card bg-white rounded-2xl p-6 shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm">Dangerous Saccos</p>
+                                <p class="text-3xl font-bold text-orange-700 mt-2" id="stat-saccos">0</p>
+                            </div>
+                            <i class="fa-solid fa-bus text-4xl text-orange-100"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            <div id="reports-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- populated by JS -->
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Top Dangerous Routes -->
+                <div class="bg-white rounded-2xl p-6 shadow">
+                    <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-red-500"></i>
+                        Most Reported Routes
+                    </h4>
+                    <div class="chart-container">
+                        <canvas id="routesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Concerns -->
+                <div class="bg-white rounded-2xl p-6 shadow">
+                    <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-exclamation-circle text-amber-500"></i>
+                        Top Safety Concerns
+                    </h4>
+                    <div class="chart-container">
+                        <canvas id="concernsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Worst Saccos -->
+                <div class="bg-white rounded-2xl p-6 shadow">
+                    <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-bus text-orange-500"></i>
+                        Saccos with Most Reports
+                    </h4>
+                    <div class="chart-container">
+                        <canvas id="saccosChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Dangerous Plates -->
+                <div class="bg-white rounded-2xl p-6 shadow">
+                    <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-car text-red-500"></i>
+                        Most Reported Vehicles
+                    </h4>
+                    <div class="chart-container">
+                        <canvas id="platesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Reports Table -->
+            <div class="bg-white rounded-2xl shadow p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h4 class="text-lg font-semibold flex items-center gap-2">
+                        <i class="fa-solid fa-list text-green-600"></i>
+                        Recent Reports
+                    </h4>
+                    <button onclick="loadReports()" 
+                            class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-semibold">Date</th>
+                                <th class="px-4 py-3 text-left font-semibold">Route</th>
+                                <th class="px-4 py-3 text-left font-semibold">Plate</th>
+                                <th class="px-4 py-3 text-left font-semibold">Sacco</th>
+                                <th class="px-4 py-3 text-left font-semibold">Issues</th>
+                                <th class="px-4 py-3 text-left font-semibold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reports-table" class="divide-y">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -286,18 +431,20 @@
         // CONFIGURATION - YOUR SETTINGS
         // ============================================================
         const CONFIG = {
-            SPREADSHEET_ID: '1tuIWGJkV9F8K0_k7QSbnuZxNJPgDN-G4YoXHlF79Mgo', // Your Google Sheet ID
-            API_KEY: 'AIzaSyC_YOUR_API_KEY_HERE', // Get from Google Cloud Console (optional)
-            SHEET_NAME: 'Reports', // Your sheet tab name
-            WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbwCm50uzmNcjZIfpQA_FZk1DPI3AeGqCn9UZ6JxzGhYE3Ukbh-1uj5rMfVq1jG9BTgPDw/exec' // ✅ Your Apps Script Web App URL
+            SPREADSHEET_ID: '1tuIWGJkV9F8K0_k7QSbnuZxNJPgDN-G4YoXHlF79Mgo',
+            API_KEY: 'AIzaSyC_YOUR_API_KEY_HERE',
+            SHEET_NAME: 'Reports',
+            WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbwCm50uzmNcjZIfpQA_FZk1DPI3AeGqCn9UZ6JxzGhYE3Ukbh-1uj5rMfVq1jG9BTgPDw/exec'
         };
+
+        // Charts storage
+        let charts = {};
 
         // ============================================================
         // FORM VALIDATION
         // ============================================================
         function validateForm(formData) {
             const errors = [];
-            
             if (!formData.travelDate) errors.push('Travel date is required');
             if (!formData.origin.trim()) errors.push('Origin is required');
             if (!formData.destination.trim()) errors.push('Destination is required');
@@ -313,7 +460,6 @@
                 if (!corruptData.type) errors.push('Corruption type is required');
                 if (!corruptData.description) errors.push('Corruption description is required');
             }
-            
             return errors;
         }
 
@@ -354,7 +500,6 @@
                     corruptionDescription: corruptionData?.description || '',
                 };
 
-                // Send to Google Apps Script Web App
                 const response = await fetch(CONFIG.WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -371,19 +516,16 @@
             }
         }
 
-        // Generate a simple report ID
         function generateReportId() {
             return 'RPT-' + Date.now().toString().slice(-8);
         }
 
         // ============================================================
-        // FETCH REPORTS FROM GOOGLE SHEETS
+        // FETCH AND ANALYZE REPORTS
         // ============================================================
         async function fetchReports() {
             try {
-                // Using Google Sheets API v4
                 const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SPREADSHEET_ID}/values/${CONFIG.SHEET_NAME}?key=${CONFIG.API_KEY}`;
-                
                 const response = await fetch(url);
                 const data = await response.json();
                 
@@ -391,13 +533,13 @@
                     return getMockData();
                 }
 
-                // Parse sheet data (skip header row)
                 const headers = data.values[0];
                 const reports = data.values.slice(1).map((row, idx) => {
                     return {
                         id: idx + 1,
                         timestamp: row[0] || '',
                         travelDate: row[1] || '',
+                        travelTime: row[2] || '',
                         origin: row[3] || '',
                         destination: row[4] || '',
                         plateNumber: row[5] || 'N/A',
@@ -405,91 +547,183 @@
                         drivingRating: row[7] || '',
                         vehicleRating: row[8] || '',
                         concerns: (row[9] || '').split('; ').filter(c => c.trim()),
+                        comments: row[10] || '',
                         isCorruption: row[12] === 'Yes'
                     };
-                }).reverse().slice(0, 9); // Latest 9 reports, reversed
+                });
 
                 return reports;
             } catch (e) {
-                console.warn("Could not fetch from Sheets, using mock data:", e);
+                console.warn("Using mock data:", e);
                 return getMockData();
             }
         }
 
         function getMockData() {
             return [
-                { 
-                    id: 1, 
-                    plateNumber: "KBC 456X", 
-                    origin: "Nairobi", 
-                    destination: "Nakuru", 
-                    timestamp: new Date(Date.now() - 86400000).toLocaleString('en-KE'),
-                    concerns: ["Overspeeding"], 
-                    isCorruption: false, 
-                    saccoName: "Easy Coach" 
-                },
-                { 
-                    id: 2, 
-                    plateNumber: "KBA 789Y", 
-                    origin: "Mombasa", 
-                    destination: "Malindi", 
-                    timestamp: new Date(Date.now() - 172800000).toLocaleString('en-KE'),
-                    concerns: ["No seatbelts", "Reckless driving"], 
-                    isCorruption: true, 
-                    saccoName: "Mombasa Raha" 
-                },
-                { 
-                    id: 3, 
-                    plateNumber: "KBD 123Z", 
-                    origin: "Eldoret", 
-                    destination: "Kitale", 
-                    timestamp: new Date(Date.now() - 259200000).toLocaleString('en-KE'),
-                    concerns: ["Overspeeding"], 
-                    isCorruption: false, 
-                    saccoName: null 
-                }
+                { id: 1, plateNumber: "KBC 456X", origin: "Nairobi", destination: "Nakuru", timestamp: new Date(Date.now() - 86400000).toLocaleString('en-KE'), concerns: ["Overspeeding"], isCorruption: false, saccoName: "Easy Coach", drivingRating: "2", vehicleRating: "3" },
+                { id: 2, plateNumber: "KBA 789Y", origin: "Mombasa", destination: "Malindi", timestamp: new Date(Date.now() - 172800000).toLocaleString('en-KE'), concerns: ["No seatbelts", "Reckless driving"], isCorruption: true, saccoName: "Mombasa Raha", drivingRating: "1", vehicleRating: "2" },
+                { id: 3, plateNumber: "KBD 123Z", origin: "Eldoret", destination: "Kitale", timestamp: new Date(Date.now() - 259200000).toLocaleString('en-KE'), concerns: ["Overspeeding", "Bad brakes"], isCorruption: false, saccoName: "Modern Coast", drivingRating: "2", vehicleRating: "2" },
+                { id: 4, plateNumber: "KBE 456P", origin: "Nairobi", destination: "Kisumu", timestamp: new Date(Date.now() - 345600000).toLocaleString('en-KE'), concerns: ["Using phone while driving"], isCorruption: false, saccoName: "Easy Coach", drivingRating: "3", vehicleRating: "4" },
+                { id: 5, plateNumber: "KBF 789Q", origin: "Nairobi", destination: "Nakuru", timestamp: new Date(Date.now() - 432000000).toLocaleString('en-KE'), concerns: ["Drunk driving"], isCorruption: true, saccoName: "Mombasa Raha", drivingRating: "1", vehicleRating: "1" },
             ];
         }
 
         // ============================================================
-        // RENDER REPORT CARDS
+        // ANALYTICS CALCULATIONS
+        // ============================================================
+        function calculateAnalytics(reports) {
+            const stats = {
+                totalReports: reports.length,
+                corruptionCases: reports.filter(r => r.isCorruption).length,
+                routes: {},
+                concerns: {},
+                saccos: {},
+                plates: {}
+            };
+
+            reports.forEach(report => {
+                // Routes
+                const route = `${report.origin} → ${report.destination}`;
+                stats.routes[route] = (stats.routes[route] || 0) + 1;
+
+                // Concerns
+                report.concerns.forEach(concern => {
+                    stats.concerns[concern] = (stats.concerns[concern] || 0) + 1;
+                });
+
+                // Saccos
+                if (report.saccoName) {
+                    stats.saccos[report.saccoName] = (stats.saccos[report.saccoName] || 0) + 1;
+                }
+
+                // Plates
+                stats.plates[report.plateNumber] = (stats.plates[report.plateNumber] || 0) + 1;
+            });
+
+            stats.highRiskRoutes = Object.keys(stats.routes).length;
+            stats.dangerousSaccos = Object.keys(stats.saccos).length;
+
+            return stats;
+        }
+
+        // ============================================================
+        // LOAD AND RENDER ANALYTICS
         // ============================================================
         async function loadReports() {
-            const grid = document.getElementById('reports-grid');
-            grid.innerHTML = '<div class="col-span-full text-center py-12"><div class="loading-skeleton inline-block text-gray-400">Loading live reports...</div></div>';
-
             const reports = await fetchReports();
+            const stats = calculateAnalytics(reports);
 
-            grid.innerHTML = reports.map(r => `
-                <div class="matatu-card bg-white rounded-3xl overflow-hidden border border-gray-100 shadow hover:shadow-lg">
-                    <div class="bg-green-50 px-6 py-4 flex items-center justify-between text-sm">
-                        <div class="font-mono font-bold text-green-700 text-lg">${r.plateNumber || 'N/A'}</div>
-                        <div class="text-xs text-gray-500">${r.timestamp.split(' ')[0]}</div>
-                    </div>
-                    <div class="p-6">
-                        <div class="text-lg font-semibold">${r.origin} → ${r.destination}</div>
-                        ${r.saccoName ? `<div class="text-xs text-gray-500 mt-1">🚌 ${r.saccoName}</div>` : ''}
-                        
-                        ${r.drivingRating || r.vehicleRating ? `
-                            <div class="flex gap-4 mt-3 text-xs">
-                                ${r.drivingRating ? `<span>Driver: ${Array(parseInt(r.drivingRating)).fill('★').join('')}</span>` : ''}
-                                ${r.vehicleRating ? `<span>Vehicle: ${Array(parseInt(r.vehicleRating)).fill('★').join('')}</span>` : ''}
-                            </div>
-                        ` : ''}
-                        
-                        <div class="flex flex-wrap gap-2 mt-6">
-                            ${r.concerns && r.concerns.length > 0 ? r.concerns.map(c => 
-                                `<span class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full">${c}</span>`
-                            ).join('') : '<span class="text-xs text-gray-400">No concerns listed</span>'}
+            // Update stats
+            document.getElementById('stat-total').textContent = stats.totalReports;
+            document.getElementById('stat-corruption').textContent = stats.corruptionCases;
+            document.getElementById('stat-routes').textContent = stats.highRiskRoutes;
+            document.getElementById('stat-saccos').textContent = stats.dangerousSaccos;
+
+            // Update charts
+            updateCharts(stats);
+
+            // Update table
+            updateReportsTable(reports);
+        }
+
+        function updateCharts(stats) {
+            // Routes Chart
+            const topRoutes = Object.entries(stats.routes)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            updateChart('routesChart', {
+                labels: topRoutes.map(r => r[0].split(' → ')[1]),
+                data: topRoutes.map(r => r[1]),
+                label: 'Reports'
+            }, 'bar');
+
+            // Concerns Chart
+            const topConcerns = Object.entries(stats.concerns)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            updateChart('concernsChart', {
+                labels: topConcerns.map(c => c[0]),
+                data: topConcerns.map(c => c[1]),
+                label: 'Count'
+            }, 'doughnut');
+
+            // Saccos Chart
+            const topSaccos = Object.entries(stats.saccos)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            updateChart('saccosChart', {
+                labels: topSaccos.map(s => s[0]),
+                data: topSaccos.map(s => s[1]),
+                label: 'Reports'
+            }, 'bar');
+
+            // Plates Chart
+            const topPlates = Object.entries(stats.plates)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            updateChart('platesChart', {
+                labels: topPlates.map(p => p[0]),
+                data: topPlates.map(p => p[1]),
+                label: 'Reports'
+            }, 'bar');
+        }
+
+        function updateChart(canvasId, data, type) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
+            const colors = ['#166534', '#4ade80', '#ef4444', '#f97316', '#eab308'];
+            
+            charts[canvasId] = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: data.label,
+                        data: data.data,
+                        backgroundColor: colors.slice(0, data.data.length),
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: type === 'doughnut'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateReportsTable(reports) {
+            const tbody = document.getElementById('reports-table');
+            tbody.innerHTML = reports.slice(0, 10).map(r => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3">${r.timestamp.split(' ')[0]}</td>
+                    <td class="px-4 py-3 text-sm">${r.origin} → ${r.destination}</td>
+                    <td class="px-4 py-3 font-mono text-sm font-bold">${r.plateNumber}</td>
+                    <td class="px-4 py-3 text-sm">${r.saccoName || '-'}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex flex-wrap gap-1">
+                            ${r.concerns.slice(0, 2).map(c => `<span class="badge badge-danger">${c}</span>`).join('')}
+                            ${r.concerns.length > 2 ? `<span class="text-xs text-gray-500">+${r.concerns.length - 2}</span>` : ''}
                         </div>
-
-                        ${r.isCorruption ? `
-                            <div class="mt-6 flex items-center gap-2 text-amber-600 text-xs font-medium bg-amber-50 p-3 rounded-lg">
-                                <i class="fa-solid fa-exclamation-triangle"></i>
-                                <span>Police corruption reported</span>
-                            </div>` : ''}
-                    </div>
-                </div>
+                    </td>
+                    <td class="px-4 py-3">
+                        ${r.isCorruption ? '<span class="badge badge-warning">⚠️ Corruption</span>' : '<span class="badge badge-success">✓ Safe</span>'}
+                    </td>
+                </tr>
             `).join('');
         }
 
@@ -497,7 +731,6 @@
         // FORM HANDLING
         // ============================================================
         function initForm() {
-            // Populate concerns checkboxes
             const concernsList = [
                 "Overspeeding", "No seatbelts", "Reckless driving", 
                 "Using phone while driving", "Overloading", "Bad brakes", 
@@ -511,14 +744,12 @@
                 </label>
             `).join('');
 
-            // Toggle corruption fields
             const corruptCheck = document.getElementById('isCorrupt');
             const corruptDiv = document.getElementById('corruption-fields');
             corruptCheck.addEventListener('change', () => {
                 corruptDiv.classList.toggle('hidden', !corruptCheck.checked);
             });
 
-            // Form submit with validation
             const form = document.getElementById('report-form');
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -538,7 +769,6 @@
                     contact: document.getElementById('contact').value,
                 };
 
-                // Validate
                 const validationErrors = validateForm(formData);
                 if (validationErrors.length > 0) {
                     showError(validationErrors.join('\n'));
@@ -583,23 +813,19 @@
             document.getElementById('submit-section').classList.toggle('hidden', section !== 'submit');
             document.getElementById('feed-section').classList.toggle('hidden', section !== 'feed');
             
-            if (section === 'feed') loadReports();
-            
-            // Update nav buttons active state
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.toggle('text-green-700', btn.textContent.includes(section === 'submit' ? 'Submit' : 'Live'));
-            });
+            if (section === 'feed') {
+                loadReports();
+            }
         }
 
         // ============================================================
-        // INIT EVERYTHING
+        // INITIALIZATION
         // ============================================================
         window.onload = () => {
             initForm();
             showSection('submit');
         };
 
-        // Make functions globally accessible
         window.showSection = showSection;
         window.loadReports = loadReports;
     </script>
